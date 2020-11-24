@@ -1,0 +1,46 @@
+
+train/segmentation.xml
+
+line 6571:
+<tag>¨®50</tag>
+->
+<tag>8359</tag>
+
+line 6711:
+#r.read() jump error
+<tag>Caf¨¦</tag>
+->
+<tag>Cafe</tag>
+
+line 10026,10037
+<tag>ESPA?OL</tag>
+->
+<tag>ESPANOL</tag>
+
+line 10048,10058
+<tag>INGL¨¦S</tag>
+->
+<tag>INGLES</tag>
+
+
+
+test/segmentation.xml
+
+line7429
+<tag>¡ê99</tag>
+->
+<tag>L99</tag>
+
+line 7707
+<tag>¡ê9</tag>
+->
+<tag>L9</tag>
+
+line 8234
+<tag>¡ê100</tag>
+->
+<tag>L100</tag>
+
+
+
+
