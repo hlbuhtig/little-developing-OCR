@@ -8,41 +8,39 @@ from list_tool import *
 
 dirr='../../data/'
 
+
+import torchvision.transforms.functional as F
+class SquarePad:
+    def __call__(self, image):
+        w, h = image.size
+        max_wh = np.max([w, h]) # randomly choose the location when padding
+        hp = int((max_wh - w) / 2)
+        vp = int((max_wh - h) / 2)
+        padding = (hp, vp, hp, vp)
+        return F.pad(image, padding, 0, 'constant')
+
+
 normalize = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 preprocess = transforms.Compose([
-    
-    #transforms.RandomCrop(32, padding=4),
-    transforms.RandomRotation(5),
+    SquarePad(),#pad to square without change shapes
+    transforms.Resize((128,128)),
     transforms.ToTensor(),
     #normalize
 ])
-
-def make_square(im, min_size=256, fill_color=(128, 128, 128)):
-    x, y = im.size
-    size = max(min_size, x, y)
-    new_im = Image.new('RGB', (size, size), fill_color)
-    new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
-    return new_im
 
 
 def default_loader(path): 
     img_pil =  Image.open(path)
     
-    #img_pil = make_square(img_pil)
-    img_pil=img_pil.resize((128,128))
-    #print(img_pil.size,type(img_pil))
     img_tensor = preprocess(img_pil)
+    
     return img_tensor
 
-def setf(wh):#in,out
+def setf(wh):#in,out; return list
     di=getlist(wh)
     fs=di['d']
     tg=di['m']
-    #print(len(fs),len(tg))
-
     return fs,tg
-    #return fs,torch.tensor(tg, dtype=torch.long) 
-
 
 
 
@@ -52,12 +50,10 @@ class trainset(Dataset):
         self.loader = loader
 
     def __getitem__(self, index):
-        #print(index)
         fn = self.images[index]
         img = self.loader(fn)
         tn= self.target[index]
         img2= self.loader(tn)
-        #target = self.target[index]
         return img,img2
 
     def __len__(self):

@@ -7,8 +7,8 @@ So I just submit what works on this project. I believe that the problem on the o
 
 More details and comments will be updated when I submited final code.
 
-
-
+Here is the github of this project:
+https://github.com/hlbuhtig/little-developing-OCR
 
 
 
@@ -37,4 +37,15 @@ My work:
 unet_main : main program of this part.
 dataloader_ICDAR2003 : rewrite dataloader
 list_tool : read .xml files of the dataset and process them
+
+
+
+
+update 2020/11/30
+
+Fix the 'dirr' in src/unet/dataloader_ICDAR2003.py. Now unet_main.py is able to read data in correct path.
+
+Add SquarePad() in src/unet/dataloader_ICDAR2003.py. Now the shapes of pictures will not be changed when resizeing.
+
+Add some comments and delete uesless codes for testing in src/unet.
 

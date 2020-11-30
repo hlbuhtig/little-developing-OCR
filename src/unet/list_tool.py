@@ -15,16 +15,6 @@ def getlist(dirr,make_mask=0):
     
     r=f.read()
     
-    '''
-    q=0
-    while(1):
-        q+=1
-        #print(q)
-        r=f.readline()
-        if(q>8000):
-            print(q,r)
-        #print(q)
-    '''
     di={'d':[],'f':[],'m':[],'t':[]}
     #picture path, segmentations, mask path, segmentation record number
 
@@ -38,7 +28,6 @@ def getlist(dirr,make_mask=0):
         name,i=wh1(r,i)
         di['d'].append(dirr+name)
         di['m'].append(dirr+name+'_mask.jpg')
-        #print(dirr+name)
         i_copy=i
 
         ii=r.find('<imageName>',i)
@@ -58,21 +47,17 @@ def getlist(dirr,make_mask=0):
             di['f'].append(rtg)
         to=len(di['f'])
         di['t'].append([fr,to])
-        #print(to-fr)
         i=i_copy
         
         if(make_mask):
-            #print(name)
             rx,ii=wh2(r,i)
             ry,ii=wh2(r,ii)
             rx=int(rx)
             ry=int(ry)
             mm=np.zeros((rx,ry))
             for q in range(fr,to):
-                #print(q,di['f'][q])
                 w=di['f'][q][2]
                 h=di['f'][q][3]
-                #print(w,h)
                 for w in range(w):
                     
                     for e in range(h):

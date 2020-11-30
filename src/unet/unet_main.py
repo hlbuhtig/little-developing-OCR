@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
 ##############################
-batch_size = 8
+batch_size = 4
 learningRate = 0.03
 epochs=100
 
@@ -18,14 +18,10 @@ from dataloader_ICDAR2003 import *
 train_data=trainset()
 test_data=testset()
 
-
-
 train_loader = DataLoader(train_data, batch_size = batch_size,
                          shuffle = True, num_workers = 0)
 test_loader = DataLoader(test_data, batch_size = batch_size,
                          shuffle = False, num_workers = 0)
-
-
 
 ###################################
 import torch.nn as nn
@@ -35,7 +31,8 @@ from tqdm import tqdm
 
 
 from unet import UNet
-net = UNet(3, 1).cuda()
+
+net = UNet(3, 1).cuda()# 3 channels, 1 class
 
 optimizer = optim.RMSprop(net.parameters(), lr=learningRate, weight_decay=1e-8, momentum=0.9)
 #scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min' if net.n_classes > 1 else 'max', patience=2)
@@ -59,7 +56,6 @@ for epoch in range(epochs):
         imgs = imgs.to(device=device, dtype=torch.float32)
         mask_type = torch.float32 if net.n_classes == 1 else torch.long
         true_masks = true_masks.to(device=device, dtype=mask_type)
-        #print(imgs.shape)
 
         masks_pred = net(imgs)
         loss = criterion(masks_pred, true_masks)
@@ -71,13 +67,13 @@ for epoch in range(epochs):
         nn.utils.clip_grad_value_(net.parameters(), 0.1)
         optimizer.step()
 
-
+    #get acc
     trainscore = eval_net(net, train_loader, device)        
     testscore = eval_net(net, test_loader, device)
     
     print('epoch',epoch,':','\ntrain score:',trainscore,'\ntest  score:',testscore)
 
-    if(testscore>macc):
+    if(testscore>macc):#save model when get high acc
         macc=testscore
         torch.save(net, 'model.pkl')
         f=open('history.txt','w')
